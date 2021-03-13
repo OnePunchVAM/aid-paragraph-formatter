@@ -9,6 +9,17 @@ class ParagraphFormatterPlugin {
     this.state = state.paragraphFormatterPlugin
   }
 
+  inputModifier(text) {
+    // Don't run if disabled
+    if (this.state.isDisabled) return
+    let modifiedText = text
+
+    // Replace starting newline
+    modifiedText = modifiedText.replace(/^\n+([^\n])/g, "\n\n$1")
+
+    return modifiedText
+  }
+
   contextModifier(text) {
     // Don't run if disabled
     if (this.state.isDisabled) return

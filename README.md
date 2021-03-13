@@ -15,6 +15,12 @@ To integrate it into your own scripts, in your `outputModifier` script make sure
 modifiedText = paragraphFormatterPlugin.outputModifier(modifiedText)
 ```
 
+Ensure consistency of your input by adding this to your `inputModifier` script call:
+
+```js
+modifiedText = paragraphFormatterPlugin.inputModifier(modifiedText)
+```
+
 Optionally you add the following to your `contextModifer` script to reduce context newlines to one per paragraph:
 
 ```js

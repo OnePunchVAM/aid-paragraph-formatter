@@ -4,6 +4,9 @@ const modifier = (text) => {
 
   // Add custom code here
 
+  // Ensures two newlines at start of input
+  modifiedText = paragraphFormatterPlugin.inputModifier(modifiedText)
+
   return { text: modifiedText }
 }
 
