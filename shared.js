@@ -4,20 +4,10 @@
 class ParagraphFormatterPlugin {
   constructor() {
     if (!state.paragraphFormatterPlugin) state.paragraphFormatterPlugin = {
-      isDisabled: false
+      isDisabled: false,
+      modifiedSize: 0
     }
     this.state = state.paragraphFormatterPlugin
-  }
-
-  inputModifier(text) {
-    // Don't run if disabled
-    if (this.state.isDisabled) return
-    let modifiedText = text
-
-    // Replace starting newline
-    modifiedText = modifiedText.replace(/^\n+([^\n])/g, "\n\n$1")
-
-    return modifiedText
   }
 
   contextModifier(text) {
@@ -26,12 +16,24 @@ class ParagraphFormatterPlugin {
     let modifiedText = text
 
     // Find two or more consecutive newlines and reduce
-    modifiedText = modifiedText.replace(/[\n]{2,}/g, "\n")
+    this.state.modifiedSize = 0
+    modifiedText = modifiedText.replace(/([\n]{2,})/g, match => {
+      this.state.modifiedSize += (match.length - 2)
+      return "\n"
+    })
 
     return modifiedText
   }
 
+  inputModifier(text) {
+    return this.displayModifier(text)
+  }
+
   outputModifier(text) {
+    return this.displayModifier(text)
+  }
+
+  displayModifier(text) {
     // Don't run if disabled
     if (this.state.isDisabled) return
     let modifiedText = text
@@ -48,7 +50,8 @@ class ParagraphFormatterPlugin {
     // Find three or more consecutive newlines and reduce
     modifiedText = modifiedText.replace(/[\n]{3,}/g, "\n\n")
 
-    console.log({output: {text, modifiedText}})
+    // Detect scene break at end and add newlines
+    modifiedText += modifiedText.endsWith("--") ? "\n\n" : ""
 
     return modifiedText
   }
